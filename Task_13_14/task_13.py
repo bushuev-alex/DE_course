@@ -16,7 +16,8 @@ class DataAnalyser:
             item = value.get("item")
             category = value.get("category")
             if res.get(category):
-                res[category].append(item)
+                if item not in res[category]:
+                    res[category].append(item)
             else:
                 res[category] = [item]
         return res
@@ -28,7 +29,7 @@ class DataAnalyser:
         return self.df[["category", "price"]].groupby("category").mean("price").sort_values("price").to_dict().get('price')
 
     def most_frequent_category(self) -> str:
-        return self.df.groupby("category").count().sort_values("item", ascending=False).reset_index()["category"][0]
+        return self.df.groupby("category").sum().sort_values("quantity", ascending=False).reset_index()["category"][0]
 
 
 
